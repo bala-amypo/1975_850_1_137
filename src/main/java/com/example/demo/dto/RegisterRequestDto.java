@@ -1,12 +1,15 @@
 package com.example.demo.dto;
 
-import lombok.Getter;
-import lombok.Setter;
-
-@Getter
-@Setter
 public class RegisterRequestDto {
     private String email;
-    private String password;
     private String fullName;
+    private String password;
+
+    public String getEmail() { return email; }
+    public String getFullName() { return fullName; }
+    public String getPassword() { return password; }
+
+    public void setEmail(String email) { this.email = email; }
+    public void setFullName(String fullName) { this.fullName = fullName; }
+    public void setPassword(String password) { this.password = password; }
 }
