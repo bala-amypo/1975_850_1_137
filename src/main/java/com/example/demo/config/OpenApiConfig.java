@@ -20,7 +20,7 @@ public class OpenApiConfig {
                         .description("API for managing users, roles and permissions"))
                 .servers(List.of(
                         new Server()
-                                .url("https://9276.408procr.amypo.ai/")
+                                .url("https://9276.408procr.amypo.ai")
                                 .description("Production Server")
                 ));
     }
