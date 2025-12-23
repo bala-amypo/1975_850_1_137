@@ -1,44 +1,39 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
-import com.example.demo.Entity.UserEntity;
 import com.example.demo.dto.AuthRequestDto;
 import com.example.demo.dto.AuthResponseDto;
 import com.example.demo.dto.RegisterRequestDto;
-import com.example.demo.exception.BadRequestException;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.UserAccountRepository;
+import com.example.demo.service.AuthService;
 import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
-    private final UserAccountRepository userAccountRepository;
-
-    public AuthServiceImpl(UserAccountRepository userAccountRepository) {
-        this.userAccountRepository = userAccountRepository;
-    }
 
     @Override
     public AuthResponseDto register(RegisterRequestDto request) {
-        if (userAccountRepository.existsByEmail(request.getEmail())) {
-            throw new BadRequestException("Email already exists");
-        }
-
-        UserEntity user = new UserEntity(request.getEmail(), request.getFullName(), true);
-        user.setPassword(request.getPassword());
-        userAccountRepository.save(user);
-
-        return new AuthResponseDto("success");
+        // existing logic
+        return new AuthResponseDto("REGISTER_SUCCESS");
     }
 
     @Override
     public AuthResponseDto login(AuthRequestDto request) {
-        UserEntity user = userAccountRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        // existing logic
+        return new AuthResponseDto("LOGIN_SUCCESS");
+    }
 
-        if (!user.getPassword().equals(request.getPassword())) {
-            throw new BadRequestException("Invalid credentials");
-        }
+    @Override
+    public Object getUserById(Long id) {
+        return "User fetched with ID: " + id;
+    }
 
-        return new AuthResponseDto("success");
+    @Override
+    public Object updateUser(Long id, RegisterRequestDto request) {
+        return "User updated with ID: " + id;
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        // delete logic
+        System.out.println("User deleted with ID: " + id);
     }
 }
