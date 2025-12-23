@@ -15,5 +15,8 @@ public class OpenApiConfig {
                         .title("SaaS User Role Permission Manager API")
                         .version("1.0")
                         .description("API for managing users, roles and permissions"));
+                        .servers(List.of(
+                            new Server().url("https://9276.408procr.amypo.ai/")
+                        ));
     }
 }
