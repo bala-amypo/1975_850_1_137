@@ -21,7 +21,7 @@ public class AuthController {
         this.authService = authService;
     }
 
-    // ---------------- POST ----------------
+    
     @PostMapping("/register")
     @Operation(summary = "Register user", description = "Register a new user")
     public ResponseEntity<AuthResponseDto> register(
@@ -36,14 +36,14 @@ public class AuthController {
         return ResponseEntity.ok(authService.login(request));
     }
 
-    // ---------------- GET ----------------
+    
     @GetMapping("/user/{id}")
     @Operation(summary = "Get user by ID", description = "Fetch user details by user ID")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(authService.getUserById(id));
     }
 
-    // ---------------- PUT ----------------
+    
     @PutMapping("/user/{id}")
     @Operation(summary = "Update user", description = "Update user details")
     public ResponseEntity<?> updateUser(
@@ -52,7 +52,7 @@ public class AuthController {
         return ResponseEntity.ok(authService.updateUser(id, request));
     }
 
-    // ---------------- DELETE ----------------
+    
     @DeleteMapping("/user/{id}")
     @Operation(summary = "Delete user", description = "Delete user by ID")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
