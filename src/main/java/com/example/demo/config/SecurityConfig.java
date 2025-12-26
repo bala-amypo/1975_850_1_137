@@ -30,10 +30,11 @@ public class SecurityConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOriginPatterns("*")
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
-                        .allowedHeaders("*")
-                        .allowCredentials(true);
+                  .allowedOriginPatterns("https://*.408procr.amypo.ai", "https://408procr.amypo.ai", "*")
+                  .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                  .allowedHeaders("*")
+                  .allowCredentials(true);
+
             }
         };
     }
