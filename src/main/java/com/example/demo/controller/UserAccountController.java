@@ -1,62 +1,43 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequestDto;
-import com.example.demo.dto.AuthResponseDto;
-import com.example.demo.dto.RegisterRequestDto;
-import com.example.demo.service.AuthService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
-import org.springframework.http.ResponseEntity;
+import com.example.demo.entity.UserAccount;
+import com.example.demo.service.UserAccountService;
 import org.springframework.web.bind.annotation.*;
+import java.util.List;
 
 @RestController
-@RequestMapping("/auth")
-@Tag(name = "Authentication", description = "Authentication CRUD endpoints")
+@RequestMapping("/api/users")
 public class UserAccountController {
 
-    private final AuthService authService;
+    private final UserAccountService service;
 
-    public UserAccountController(AuthService authService) {
-        this.authService = authService;
+    public UserAccountController(UserAccountService service) {
+        this.service = service;
     }
 
-    
-    @PostMapping("/register")
-    @Operation(summary = "Register user", description = "Register a new user")
-    public ResponseEntity<AuthResponseDto> register(
-            @org.springframework.web.bind.annotation.RequestBody RegisterRequestDto request) {
-        return ResponseEntity.ok(authService.register(request));
+    @PostMapping
+    public UserAccount create(@RequestBody UserAccount user) {
+        return service.createUser(user);
     }
 
-    @PostMapping("/login")
-    @Operation(summary = "Login user", description = "Login with email and password")
-    public ResponseEntity<AuthResponseDto> login(
-            @org.springframework.web.bind.annotation.RequestBody AuthRequestDto request) {
-        return ResponseEntity.ok(authService.login(request));
+    @GetMapping("/{id}")
+    public UserAccount get(@PathVariable Long id) {
+        return service.getUserById(id);
     }
 
-    
-    @GetMapping("/user/{id}")
-    @Operation(summary = "Get user by ID", description = "Fetch user details by user ID")
-    public ResponseEntity<?> getUserById(@PathVariable Long id) {
-        return ResponseEntity.ok(authService.getUserById(id));
+    @GetMapping
+    public List<UserAccount> getAll() {
+        return service.getAllUsers();
     }
 
-    
-    @PutMapping("/user/{id}")
-    @Operation(summary = "Update user", description = "Update user details")
-    public ResponseEntity<?> updateUser(
-            @PathVariable Long id,
-            @org.springframework.web.bind.annotation.RequestBody RegisterRequestDto request) {
-        return ResponseEntity.ok(authService.updateUser(id, request));
+    @PutMapping("/{id}")
+    public UserAccount update(@PathVariable Long id, @RequestBody UserAccount u) {
+        return service.updateUser(id, u);
     }
 
-    
-    @DeleteMapping("/user/{id}")
-    @Operation(summary = "Delete user", description = "Delete user by ID")
-    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
-        authService.deleteUser(id);
-        return ResponseEntity.ok("User deleted successfully");
+    @DeleteMapping("/{id}")
+    public String deactivate(@PathVariable Long id) {
+        service.deactivateUser(id);
+        return "Deactivated";
     }
 }
