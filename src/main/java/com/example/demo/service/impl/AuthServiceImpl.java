@@ -15,7 +15,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.HashMap;
 import java.util.Map;
-@Service
 public class AuthServiceImpl implements AuthService {
 
     private final UserAccountRepository userRepo;
