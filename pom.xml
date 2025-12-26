@@ -24,7 +24,7 @@
 
     <dependencies>
 
-        <!-- Spring Boot Core -->
+        <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -64,16 +64,17 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Databases -->
-       
-<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-j</artifactId>
-    <version>8.0.32</version>
-    <scope>runtime</scope>
-</dependency>
-
-        
+        <!-- Database -->
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.0.32</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+        </dependency>
 
         <!-- Testing -->
         <dependency>
@@ -86,8 +87,7 @@
             <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
-
-        <!-- TestNG (Portal Support) -->
+        <!-- TestNG -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -106,7 +106,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- Surefire - Test runner -->
+            <!-- Surefire (Test Runner) -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
