@@ -7,12 +7,11 @@ import java.io.IOException;
 @WebServlet("/simple-status")
 public class SimpleStatusServlet extends HttpServlet {
 
-    
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws IOException {   // <-- public, NOT protected
         resp.setContentType("text/plain");
-        resp.setStatus(HttpServletResponse.SC_OK);
+        resp.setStatus(200);
         resp.getWriter().write("SaaS User Role Permission Manager is running");
     }
 }
