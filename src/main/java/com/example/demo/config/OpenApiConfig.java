@@ -1,4 +1,4 @@
--- Active: 1766736278713@@127.0.0.1@3306@mysql
+
 package com.example.demo.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
