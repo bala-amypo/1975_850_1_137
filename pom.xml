@@ -66,11 +66,12 @@
 
         <!-- Databases -->
         <dependency>
-            <groupId>mysql</groupId>
-            <artifactId>mysql-connector-j</artifactId>
-            <version>8.3.0</version>
-            <scope>runtime</scope>
-        </dependency>
+    <groupId>mysql</groupId>
+    <artifactId>mysql-connector-j</artifactId>
+    <version>8.0.33</version>
+    <scope>runtime</scope>
+</dependency>
+
 
         <dependency>
             <groupId>com.h2database</groupId>
