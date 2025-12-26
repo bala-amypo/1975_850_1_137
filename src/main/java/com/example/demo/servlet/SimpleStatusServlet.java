@@ -1,44 +1,17 @@
-package com.example.demo.controller;
+package com.example.demo.servlet;
 
-import com.example.demo.entity.UserAccount;
-import com.example.demo.service.UserAccountService;
-import org.springframework.web.bind.annotation.*;
+import jakarta.servlet.http.*;
+import jakarta.servlet.annotation.*;
+import java.io.IOException;
 
-import java.util.List;
+@WebServlet("/simple-status")
+public class SimpleStatusServlet extends HttpServlet {
 
-@RestController
-@RequestMapping("/api/users")
-public class UserAccountController {
-
-    private final UserAccountService service;
-
-    public UserAccountController(UserAccountService service) {
-        this.service = service;
-    }
-
-    @PostMapping
-    public UserAccount create(@RequestBody UserAccount user) {
-        return service.createUser(user);
-    }
-
-    @GetMapping("/{id}")
-    public UserAccount get(@PathVariable Long id) {
-        return service.getUserById(id);
-    }
-
-    @GetMapping
-    public List<UserAccount> getAll() {
-        return service.getAllUsers();
-    }
-
-    @PutMapping("/{id}")
-    public UserAccount update(@PathVariable Long id, @RequestBody UserAccount u) {
-        return service.updateUser(id, u);
-    }
-
-    @DeleteMapping("/{id}")
-    public String deactivate(@PathVariable Long id) {
-        service.deactivateUser(id);
-        return "Deactivated";
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+        resp.setContentType("text/plain");
+        resp.setStatus(200);
+        resp.getWriter().write("SaaS User Role Permission Manager is running");
     }
 }
