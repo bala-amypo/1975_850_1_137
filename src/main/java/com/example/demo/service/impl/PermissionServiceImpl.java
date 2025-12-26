@@ -7,7 +7,11 @@ import com.example.demo.repository.PermissionRepository;
 import com.example.demo.service.PermissionService;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class PermissionServiceImpl implements PermissionService {
+
 
     private final PermissionRepository permissionRepository;
 

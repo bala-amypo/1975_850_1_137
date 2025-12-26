@@ -9,8 +9,11 @@ import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.PermissionRepository;
 import com.example.demo.service.RolePermissionService;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class RolePermissionServiceImpl implements RolePermissionService {
+
 
     private final RolePermissionRepository rolePermissionRepository;
     private final RoleRepository roleRepository;

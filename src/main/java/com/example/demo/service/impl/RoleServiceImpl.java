@@ -6,8 +6,11 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.RoleRepository;
 import com.example.demo.service.RoleService;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
-public class RoleServiceImpl implements RoleService {
+@Service
+public class UserRoleServiceImpl implements UserRoleService {
+
 
     private final RoleRepository roleRepository;
 
