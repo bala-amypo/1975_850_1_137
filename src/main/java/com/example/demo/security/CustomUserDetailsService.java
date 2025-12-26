@@ -11,7 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
 
-@Service  // ⬅️ ADD THIS
+@Service  
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserAccountRepository userRepo;
