@@ -1,17 +1,44 @@
-package com.example.demo.servlet;
+package com.example.demo.controller;
 
-import jakarta.servlet.annotation.WebServlet;
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import com.example.demo.entity.UserAccount;
+import com.example.demo.service.UserAccountService;
+import org.springframework.web.bind.annotation.*;
 
-@WebServlet(urlPatterns = "/simple-status")
-public class SimpleStatusServlet extends HttpServlet {
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("text/plain");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().write("SaaS User Role Permission Manager is running");
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/users")
+public class UserAccountController {
+
+    private final UserAccountService service;
+
+    public UserAccountController(UserAccountService service) {
+        this.service = service;
+    }
+
+    @PostMapping
+    public UserAccount create(@RequestBody UserAccount user) {
+        return service.createUser(user);
+    }
+
+    @GetMapping("/{id}")
+    public UserAccount get(@PathVariable Long id) {
+        return service.getUserById(id);
+    }
+
+    @GetMapping
+    public List<UserAccount> getAll() {
+        return service.getAllUsers();
+    }
+
+    @PutMapping("/{id}")
+    public UserAccount update(@PathVariable Long id, @RequestBody UserAccount u) {
+        return service.updateUser(id, u);
+    }
+
+    @DeleteMapping("/{id}")
+    public String deactivate(@PathVariable Long id) {
+        service.deactivateUser(id);
+        return "Deactivated";
     }
 }
