@@ -4,12 +4,14 @@ import com.example.demo.entity.UserAccount;
 import com.example.demo.entity.UserRole;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.repository.UserRoleRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.*;
 
+@Service  // ⬅️ ADD THIS
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserAccountRepository userRepo;
