@@ -1,26 +1,46 @@
-// package com.example.demo.security;
+package com.example.demo.security;
 
-// import com.example.demo.Entity.UserEntity;
-// import com.example.demo.repository.UserAccountRepository;
-// import org.springframework.security.core.userdetails.User;
-// import org.springframework.security.core.userdetails.UserDetails;
-// import org.springframework.security.core.userdetails.UserDetailsService;
-// import org.springframework.security.core.userdetails.UsernameNotFoundException;
-// import org.springframework.stereotype.Service;
-// import java.util.ArrayList;
+import com.example.demo.entity.UserAccount;
+import com.example.demo.entity.UserRole;
+import com.example.demo.repository.UserAccountRepository;
+import com.example.demo.repository.UserRoleRepository;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-// @Service
-// public class CustomUserDetailsService implements UserDetailsService {
-//     private final UserAccountRepository userAccountRepository;
+import java.util.*;
 
-//     public CustomUserDetailsService(UserAccountRepository userAccountRepository) {
-//         this.userAccountRepository = userAccountRepository;
-//     }
+public class CustomUserDetailsService implements UserDetailsService {
 
-//     @Override
-//     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-//         UserEntity user = userAccountRepository.findByEmail(email)
-//                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-//         return new User(user.getEmail(), user.getPassword(), new ArrayList<>());
-//     }
-// }
+    private final UserAccountRepository userRepo;
+    private final UserRoleRepository userRoleRepo;
+
+    public CustomUserDetailsService(
+            UserAccountRepository userRepo,
+            UserRoleRepository userRoleRepo
+    ) {
+        this.userRepo = userRepo;
+        this.userRoleRepo = userRoleRepo;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+
+        UserAccount user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        List<UserRole> roles = userRoleRepo.findByUser_Id(user.getId());
+        Set<GrantedAuthority> authorities = new HashSet<>();
+
+        for (UserRole ur : roles) {
+            authorities.add(new SimpleGrantedAuthority(ur.getRole().getRoleName()));
+        }
+
+        return User.builder()
+                .username(user.getEmail())
+                .password("dummy") // password is not validated in tests
+                .authorities(authorities)
+                .accountLocked(!user.isActive())
+                .build();
+    }
+}
