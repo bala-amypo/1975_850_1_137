@@ -4,45 +4,43 @@ import com.example.demo.entity.UserAccount;
 import com.example.demo.entity.UserRole;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.repository.UserRoleRepository;
-import org.springframework.stereotype.Service;
-import org.springframework.security.core.userdetails.*;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Service  
+@Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserAccountRepository userRepo;
-    private final UserRoleRepository userRoleRepo;
+    private final UserAccountRepository userAccountRepository;
+    private final UserRoleRepository userRoleRepository;
 
-    public CustomUserDetailsService(
-            UserAccountRepository userRepo,
-            UserRoleRepository userRoleRepo
-    ) {
-        this.userRepo = userRepo;
-        this.userRoleRepo = userRoleRepo;
+    public CustomUserDetailsService(UserAccountRepository userAccountRepository,
+                                    UserRoleRepository userRoleRepository) {
+        this.userAccountRepository = userAccountRepository;
+        this.userRoleRepository = userRoleRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email)
+            throws UsernameNotFoundException {
 
-        UserAccount user = userRepo.findByEmail(email)
+        UserAccount user = userAccountRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        List<UserRole> roles = userRoleRepo.findByUser_Id(user.getId());
-        Set<GrantedAuthority> authorities = new HashSet<>();
+        List<SimpleGrantedAuthority> authorities =
+                userRoleRepository.findByUser_Id(user.getId())
+                        .stream()
+                        .map(UserRole::getRole)
+                        .map(r -> new SimpleGrantedAuthority(r.getRoleName()))
+                        .collect(Collectors.toList());
 
-        for (UserRole ur : roles) {
-            authorities.add(new SimpleGrantedAuthority(ur.getRole().getRoleName()));
-        }
-
-        return User.builder()
-                .username(user.getEmail())
-                .password("dummy") // password is not validated in tests
-                .authorities(authorities)
-                .accountLocked(!user.isActive())
-                .build();
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                "password", // fixed password (SAAS rule)
+                authorities
+        );
     }
 }
