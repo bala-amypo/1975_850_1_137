@@ -1,18 +1,20 @@
 package com.example.demo.servlet;
 
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
 import java.io.IOException;
 
-@WebServlet("/simple-status")
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 public class SimpleStatusServlet extends HttpServlet {
 
-    
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        resp.setContentType("text/plain");
-        resp.setStatus(HttpServletResponse.SC_OK);
-        resp.getWriter().write("SaaS User Role Permission Manager is running");
+
+        response.setContentType("text/plain");
+        response.setStatus(HttpServletResponse.SC_OK);
+        response.getWriter()
+                .write("SaaS User Role Permission Manager is running");
     }
 }
