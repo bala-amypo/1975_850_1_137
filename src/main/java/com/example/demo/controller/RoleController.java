@@ -1,43 +1,100 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.Role;
-import com.example.demo.service.RoleService;
-import org.springframework.web.bind.annotation.*;
 import java.util.List;
+
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.entity.Role;
+import com.example.demo.repository.RoleRepository;
 
 @RestController
 @RequestMapping("/api/roles")
 public class RoleController {
+    private RoleRepository roleRepository;
 
-    private final RoleService service;
-
-    public RoleController(RoleService service) {
-        this.service = service;
+    public RoleController(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @PostMapping
-    public Role create(@RequestBody Role r) {
-        return service.createRole(r);
-    }
-
-    @GetMapping("/{id}")
-    public Role get(@PathVariable Long id) {
-        return service.getRoleById(id);
+    public Role createRole(@RequestBody Role role) {
+        return roleRepository.save(role);
     }
 
     @GetMapping
-    public List<Role> getAll() {
-        return service.getAllRoles();
+    public List<Role> getAllRoles() {
+        return roleRepository.findAll();
     }
 
-    @PutMapping("/{id}")
-    public Role update(@PathVariable Long id, @RequestBody Role r) {
-        return service.updateRole(id, r);
+    @GetMapping("/{id}")
+    public Role getRoleById(@PathVariable Long id) {
+        return roleRepository.findById(id).orElse(null);
     }
 
-    @DeleteMapping("/{id}")
-    public String deactivate(@PathVariable Long id) {
-        service.deactivateRole(id);
-        return "Deactivated";
+   @PutMapping("/{id}")
+public Role updateRole(@PathVariable Long id, @RequestBody Role role) {
+    Role existing = roleRepository.findById(id).orElse(null);
+    if (existing != null) {
+        existing.setRoleName(role.getRoleName());
+        return roleRepository.save(existing);
+    }
+    return null;
+}
+
+    @PutMapping("/{id}/deactivate")
+    public Role deactivateRole(@PathVariable Long id) {
+        Role role = roleRepository.findById(id).orElse(null);
+        if (role != null) {
+            role.setActive(false);
+            return roleRepository.save(role);
+        }
+        return null;
     }
 }
+
+
+
+
+
+// package com.example.demo.controller;
+
+// import java.util.List;
+
+// import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.web.bind.annotation.*;
+
+// import com.example.demo.entity.Role;
+// import com.example.demo.service.RoleService;
+
+// @RestController
+// @RequestMapping("/api/roles")
+// public class RoleController {
+
+//     @Autowired
+//     private RoleService service;
+
+//     @PostMapping
+//     public Role createRole(@RequestBody Role role) {
+//         return service.createRole(role);
+//     }
+
+//     @GetMapping
+//     public List<Role> getAllRoles() {
+//         return service.getAllRoles();
+//     }
+
+//     @GetMapping("/{id}")
+//     public Role getRoleById(@PathVariable long id) {
+//         return service.getRoleById(id);
+//     }
+
+//     @PutMapping("/{id}")
+//     public Role updateRole(@PathVariable long id, @RequestBody Role role) {
+//         return service.updateRole(id, role);
+//     }
+
+//     @PutMapping("/{id}/deactivate")
+//     public void deactivateRole(@PathVariable long id) {
+//         service.deactivateRole(id);
+//     }
+// }

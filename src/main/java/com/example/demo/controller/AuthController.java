@@ -1,13 +1,14 @@
 package com.example.demo.controller;
 
+import org.springframework.web.bind.annotation.*;
+
+import com.example.demo.service.AuthService;
 import com.example.demo.dto.AuthRequestDto;
 import com.example.demo.dto.AuthResponseDto;
 import com.example.demo.dto.RegisterRequestDto;
-import com.example.demo.service.AuthService;
-import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/api/auth")
 public class AuthController {
 
     private final AuthService authService;
@@ -17,8 +18,8 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody RegisterRequestDto request) {
-        return authService.register(request);
+    public void register(@RequestBody RegisterRequestDto request) {
+        authService.register(request);
     }
 
     @PostMapping("/login")
