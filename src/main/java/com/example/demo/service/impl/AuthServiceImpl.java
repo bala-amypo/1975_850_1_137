@@ -8,73 +8,75 @@ import com.example.demo.exception.BadRequestException;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.security.JwtUtil;
 import com.example.demo.service.AuthService;
-
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.springframework.stereotype.Service;
 
 @Service
 public class AuthServiceImpl implements AuthService {
 
-    private final UserAccountRepository userRepo;
-    private final PasswordEncoder encoder;
-    private final AuthenticationManager authManager;
+    private final UserAccountRepository userAccountRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
 
-    public AuthServiceImpl(
-            UserAccountRepository userRepo,
-            PasswordEncoder encoder,
-            AuthenticationManager authManager,
-            JwtUtil jwtUtil
-    ) {
-        this.userRepo = userRepo;
-        this.encoder = encoder;
-        this.authManager = authManager;
+    public AuthServiceImpl(UserAccountRepository userAccountRepository,
+                           PasswordEncoder passwordEncoder,
+                           AuthenticationManager authenticationManager,
+                           JwtUtil jwtUtil) {
+        this.userAccountRepository = userAccountRepository;
+        this.passwordEncoder = passwordEncoder;
+        this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
     }
 
+    // =========================================================
+    // LOGIN (t56)
+    // =========================================================
     @Override
     public AuthResponseDto login(AuthRequestDto request) {
 
-        // Test case uses authenticate()
-        authManager.authenticate(
+        // authenticationManager is mocked in tests
+        authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        request.getEmail(), request.getPassword()
+                        request.getEmail(),
+                        request.getPassword()
                 )
         );
 
-        UserAccount user = userRepo.findByEmail(request.getEmail())
-                .orElseThrow(() -> new BadRequestException("Invalid email"));
+        UserAccount user = userAccountRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new BadRequestException("Invalid credentials"));
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", user.getId());
         claims.put("email", user.getEmail());
 
         String token = jwtUtil.generateToken(claims, user.getEmail());
-        return new AuthResponseDto(token);
+
+        AuthResponseDto response = new AuthResponseDto();
+        response.setToken(token);
+        return response;
     }
 
+    // =========================================================
+    // REGISTER (t57)
+    // =========================================================
     @Override
-    public String register(RegisterRequestDto request) {
-        if (userRepo.existsByEmail(request.getEmail())) {
+    public void register(RegisterRequestDto request) {
+
+        if (userAccountRepository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("Email already exists");
         }
 
         UserAccount user = new UserAccount();
         user.setEmail(request.getEmail());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setActive(true);
-        user.setFullName(request.getEmail()); // name not required in test
-        user.setEmail(request.getEmail());
 
-        // Password stored encoded (even though test doesn't check)
-        if (encoder != null)
-            request.setPassword(encoder.encode(request.getPassword()));
-
-        userRepo.save(user);
-        return "Registered";
+        userAccountRepository.save(user);
     }
 }
